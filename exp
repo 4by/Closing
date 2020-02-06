@@ -1,0 +1,117 @@
+#!/bin/bash
+
+#### 1) сначала работа с api
+
+razobr=/home/poisong/Project/bash/close
+name=qqq
+
+t=`curl -v POST "http://api-c1.obedis.ru/api/signin.json" -H Content-type:application/json -d '{"email": "taganka@obedis.ru", "password": "12345678!"}'`
+t=`echo ${t#*token\":\"}` 
+t=`echo ${t%%\",\"expires_in\":189216000*}`
+a=`curl -X GET 'https://api-c1.obedis.ru/api/v1/statistics/dishes/statistic?begin=20'${3}'-'${2}'-'${1}'&end=20'${3}'-'${2}'-'${1}'&restaurantId=10&access_token='$t`
+
+function num {
+for (( z = 1; z <= $1; z++ ))
+do
+local a=`echo ${a#$2}`
+local b=`echo ${a%%$3}`
+done
+echo $b
+}
+
+i[319]=1 i[377]=2 i[311]=3 i[304]=4 i[363]=5 i[364]=6 i[336]=7 i[365]=8 i[385]=9 i[325]=10
+i[314]=11 i[317]=12 i[337]=13 i[315]=14 i[378]=15 i[332]=16 i[323]=17 i[358]=18 i[359]=19 i[360]=20 i[361]=21
+i[362]=22 i[367]=23 i[316]=24 i[313]=25 i[330]=26 i[368]=27 i[331]=28 i[379]=29 i[382]=30 i[381]=31
+i[380]=32 i[383]=33 i[384]=34 i[333]=35 i[366]=36 i[357]=37 i[369]=38 i[370]=39 i[371]=40 i[303]=41 i[335]=42
+i[312]=43 i[309]=44 i[321]=45 i[329]=46 i[318]=47 i[334]=48 i[322]=49 i[308]=50 i[372]=51 i[373]=52
+i[374]=53 i[375]=54 i[376]=55 i[324]=56 i[386]=57 i[302]=58 i[338]=59 i[356]=60 i[306]=61 
+
+
+for ((p = 1; p <= 59; p++ )) do
+l[p]=$(num $p *\"orders_total\"\: ,\"*) #колво проданных
+v[p]=$(num $p *\"total_return\"\: ,\"*) #колво во отмененных
+let "z[p]=${l[p]}-${v[p]}" #заказы с учетом отмен
+q[p]=$(num $p *\"dish_id\"\: ,\"*) #айдишики
+m[${i[${q[p]}]}]=${z[p]} #слева массив с номерами в заказнике. справа количество проданных
+
+
+###echo "id=${q[p]}, nomer=$(( ${i[${q[p]}]} + 1 )), prod=${z[p]}"
+
+
+done
+
+
+#### 2) дальше работа с excel
+
+
+unzip $razobr/$name.xls -d $razobr
+rm $razobr/$name.xls
+
+nm="`sed 's/<table:table-cell/\n<table:table-cell/g' $razobr/content.xml | wc -l`"
+im=62
+jm=11
+n=1
+sed -i 's/<table:table-cell/\n<table:table-cell/g' $razobr/content.xml | sed 's/<table:table-cell\/>/0/'
+#странно что мы заменили тут строчку на ноль
+for (( i = 1; i <= $im; i++))
+do
+for (( j = 1; j <= $jm; j++))
+do
+
+
+
+a="`sed -n ''$n'p' $razobr/content.xml`" #выбираем строку n
+if [[ $a == "`echo $a | grep -o '<table:table-cell.*<text:.>[a-zA-Zа-яА-Я0-9.,"/\\& :;<>() №-]*<\/text:.>.*<\/table:table-cell>'`" ]] 
+#если в клетке было значение
+then
+
+if [[ $j == 3 && $i -ge 2 ]] #такой столбец заменяем
+then
+sed -i -e ''$n's/<text:.>[a-zA-Zа-яА-Я0-9.,"/\\& :;<>() №-]*<\/text:.>/<text:p>'${m[i-1]-0}'<\/text:p>/' -e ''$n's/office:value="[a-zA-Zа-яА-Я0-9.,"/\\& :;<>() №-]*"/office:value="'${m[i-1]-0}'"/' $razobr/content.xml
+ #заменили на <text:p>МАССИВ С КОЛИЧЕСТВОМ ЕДЫ С ИНДЕКСОМ -1, ТАК КАК ЕЩЕ ПОЛЯ ТИПА "НАИМЕНОВАНИЕ"</text:p>
+fi
+
+elif [[ $a == "`echo $a | grep -o '<table:table-cell.table:style-name=[a-zA-Zа-яА-Я0-9.,"/\\& :;<>() №-]*/>'`" ]]
+#если клетка была пустая
+then
+
+if [[ $j == 3 && $i -ge 2 ]] #такой столбец заменяем
+then
+
+
+
+sed -i ''$n's/\/>$/ office:value-type="float" office:value="'${m[i-1]-0}'" calcext:value-type="float"><text:p>'${m[i-1]-0}'<\/text:p><\/table:table-cell>/' $razobr/content.xml
+
+
+
+
+echo "$i-$j:`sed -n ''$n'p' $razobr/content.xml`"
+
+
+
+
+
+
+
+
+fi
+
+else
+j=$(( $j - 1 ))
+fi
+n=$(( $n + 1 ))
+
+
+
+
+done
+done
+
+
+
+sed -i -n 'H;${g;s/\n//gp}' $razobr/content.xml
+
+cd $razobr
+find . -type f | xargs zip $razobr/$name.xls
+rm -r Configurations2; rm content.xml;  rm manifest.rdf;  rm -r META-INF;  rm meta.xml;  rm mimetype;  rm settings.xml;  rm styles.xml;  rm -r Thumbnails;
+#find $razobr | sed 's~'`pwd`'~.~g' | xargs zip $razobr/$name.xls

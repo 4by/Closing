@@ -1,0 +1,38 @@
+{
+  "resultCount": 1,
+  "results": [
+    {
+      "wrapperType": "track",
+      "kind": "song",
+      "artistId": 1387511625,
+      "collectionId": 1460933575,
+      "trackId": 1460933756,
+      "artistName": "Craig Karpslis",
+      "collectionName": "Dandelion Hip Hop Instrumentals",
+      "trackName": "Papa Sha",
+      "collectionCensoredName": "Dandelion Hip Hop Instrumentals",
+      "trackCensoredName": "Papa Sha",
+      "artistViewUrl": "https://music.apple.com/us/artist/craig-karpslis/1387511625?uo=4",
+      "collectionViewUrl": "https://music.apple.com/us/album/papa-sha/1460933575?i=1460933756&uo=4",
+      "trackViewUrl": "https://music.apple.com/us/album/papa-sha/1460933575?i=1460933756&uo=4",
+      "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview123/v4/a5/3e/05/a53e052d-05e7-dfdb-dee9-b31388f111dd/mzaf_2464789436235682110.plus.aac.p.m4a",
+      "artworkUrl30": "https://is3-ssl.mzstatic.com/image/thumb/Music113/v4/09/94/b9/0994b90e-ec4d-a524-fbd4-73e58dd6f342/source/30x30bb.jpg",
+      "artworkUrl60": "https://is3-ssl.mzstatic.com/image/thumb/Music113/v4/09/94/b9/0994b90e-ec4d-a524-fbd4-73e58dd6f342/source/60x60bb.jpg",
+      "artworkUrl100": "https://is3-ssl.mzstatic.com/image/thumb/Music113/v4/09/94/b9/0994b90e-ec4d-a524-fbd4-73e58dd6f342/source/100x100bb.jpg",
+      "collectionPrice": 9.99,
+      "trackPrice": 0.99,
+      "releaseDate": "2019-02-23T12:00:00Z",
+      "collectionExplicitness": "notExplicit",
+      "trackExplicitness": "notExplicit",
+      "discCount": 1,
+      "discNumber": 1,
+      "trackCount": 20,
+      "trackNumber": 1,
+      "trackTimeMillis": 196690,
+      "country": "USA",
+      "currency": "USD",
+      "primaryGenreName": "Hip-Hop/Rap",
+      "isStreamable": true
+    }
+  ]
+}

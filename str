@@ -1,0 +1,10 @@
+#!/bin/bash
+echo "какую строку будем заменять?"
+read n
+echo "введите новое значение для $n строки"
+read d
+sed -i -e "$n a $d" note.csv # -i говорит что изменения надо сразу сохранить в файле
+sed -i -e "$n d" note.csv
+ 
+#или
+#sed '$n c $d' note.csv
